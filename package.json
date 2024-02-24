@@ -1,0 +1,6 @@
+{
+  "name": "svelte-google-maps",
+  "workspaces": [
+    "packages/svelte-client"
+  ]
+}
