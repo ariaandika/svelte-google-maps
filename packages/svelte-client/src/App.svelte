@@ -10,11 +10,29 @@ let mapElem
 onMount(async () => {
     const loader = new Loader({ apiKey, version: "weekly", libraries: ["maps","marker"] })
 
+    const pos = {lat: 37.39094933041195, lng: -122.02503913145092}
+
+    if (!navigator.geolocation) { return console.log("No geo ?") }
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            pos.lat = position.coords.latitude
+            pos.lng = position.coords.longitude
+
+            // infoWindow.setPosition(pos);
+            // infoWindow.setContent("Location found.");
+            // infoWindow.open(map);
+            // map.setCenter(pos);
+        },
+        (er) => console.error(er),
+        { enableHighAccuracy: true }
+    );
+
     const { Map, InfoWindow } = await loader.importLibrary("maps")
     const { AdvancedMarkerElement } = await loader.importLibrary("marker")
     
     const map = new Map(mapElem, {
-        center: {lat: 37.39094933041195, lng: -122.02503913145092},
+        center: pos,
         zoom: 14,
         mapId: '4504f8b37365c3d0',
     });
@@ -22,7 +40,7 @@ onMount(async () => {
     const infoWindow = new InfoWindow();
     const draggableMarker = new AdvancedMarkerElement({
         map,
-        position: {lat: 37.39094933041195, lng: -122.02503913145092},
+        position: pos,
         gmpDraggable: true,
         title: "This marker is draggable.",
     });
@@ -35,21 +53,8 @@ onMount(async () => {
     });
 })
 
+
 </script>
 
 <div bind:this={mapElem} class="w-full h-full"></div>
-
-<!-- <iframe -->
-<!--     title="oof" -->
-<!--     width="600" -->
-<!--     height="450" -->
-<!--     style="border:0" -->
-<!--     loading="lazy" -->
-<!--     allowfullscreen -->
-<!--     referrerpolicy="no-referrer-when-downgrade" -->
-<!--     src="https://www.google.com/maps/embed/v1/place?key={apikey}&q=Space+Needle,Seattle+WA"> -->
-<!-- </iframe> -->
-
-
-
 
